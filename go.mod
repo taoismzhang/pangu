@@ -1,27 +1,47 @@
 module github.com/pangum/pangu
 
-go 1.16
+go 1.23
 
 require (
- 	github.com/drone/envsubst v1.0.3
-	github.com/common-nighthawk/go-figure v0.0.0-20200609044655-c4b36f998cf2
-	github.com/go-playground/validator/v10 v10.9.0 // indirect
-	github.com/mitchellh/mapstructure v1.4.2 // indirect
-	github.com/pelletier/go-toml v1.2.0
-	github.com/storezhang/dig v0.0.1
-	github.com/storezhang/gox v1.8.1
-	github.com/storezhang/guc v0.0.2
-	github.com/storezhang/mengpo v0.1.0
-	github.com/storezhang/simaqian v0.0.6
-	github.com/storezhang/validatorx v1.0.9
-	github.com/urfave/cli/v2 v2.3.0
-	golang.org/x/crypto v0.0.0-20211115234514-b4de73f9ece8 // indirect
-	golang.org/x/sys v0.0.0-20211113001501-0c823b97ae02 // indirect
-	golang.org/x/text v0.3.7 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+	github.com/goexl/gfx v0.2.5
+	github.com/goexl/gox v1.8.9
+	github.com/pangum/config v0.1.0
+	github.com/urfave/cli/v2 v2.27.5
+	go.uber.org/dig v1.18.0
+	golang.org/x/sys v0.26.0 // indirect
+	golang.org/x/text v0.19.0 // indirect
 )
 
-// replace github.com/storezhang/gox => ../gox
-// replace github.com/storezhang/god => ../../storezhang/god
-// replace github.com/storezhang/simaqian => ../glog
-// replace github.com/storezhang/validatorx => ../../storezhang/validatorx
+require (
+	github.com/drone/envsubst v1.0.3
+	github.com/fsnotify/fsnotify v1.8.0
+	github.com/goexl/env v0.0.2
+	github.com/goexl/exception v0.0.1
+	github.com/goexl/log v0.0.7
+	github.com/goexl/mengpo v0.2.6
+	github.com/goexl/structer v0.1.9
+	github.com/goexl/xiren v0.0.8
+	github.com/olekukonko/tablewriter v0.0.5
+	github.com/zs5460/art v0.3.0
+)
+
+require (
+	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.6 // indirect
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.22.1 // indirect
+	github.com/goexl/baozheng v0.0.1 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/leodido/go-urn v1.4.0 // indirect
+	github.com/mattn/go-runewidth v0.0.16 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
+	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/rs/xid v1.6.0 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/stretchr/testify v1.9.0 // indirect
+	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
+	golang.org/x/crypto v0.28.0 // indirect
+	golang.org/x/net v0.30.0 // indirect
+)

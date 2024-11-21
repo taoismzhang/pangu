@@ -1,46 +1,66 @@
+kind: secret
+name: token_github
+get:
+  path: secrets
+  name: token_github_storezhang
+---
+
+
 kind: pipeline
 type: docker
-name: 盘古文档
+name: 发布
 
 
 clone:
   disable: true
 
 
-trigger:
-  event:
-    exclude:
-      - pull_request
-
-
 environment:
-  GOPROXY: https://goproxy.cn
+  CHANGELOG_TAG_OUTPUT: CHANGELOG.tag.md
 
 
 steps:
-  - name: 拉代码
-    image: plugins/git
-    pull: if-not-exists
+  - name: 代码
+    image: ccr.ccs.tencentyun.com/dronestock/git
+    pull: always
 
-  - name: 生成文档
-    image: node
-    pull: if-not-exists
-    commands:
-      - cd doc
-      - yarn install
-      - yarn docs:build
-
-  - name: 部署到腾讯云
-    image: storezhang/cos
+  - name: 编译
+    image: ccr.ccs.tencentyun.com/pangum/drone
+    pull: always
+    volumes:
+      - name: go
+        path: /var/lib/go
     settings:
-      secret_id:
-        from_secret: cos_secret_id
-      secret_key:
-        from_secret: cos_secret_key
-      base_url: https://pangu-1253228583.cos.ap-chengdu.myqcloud.com
-      folder: doc/dist
+      compress:
+        enabled: false
+
+  - name: 改变
+    image: ccr.ccs.tencentyun.com/dronestock/changelog
+    pull: always
+    when:
+      event:
+        - tag
+    settings:
+      output: $${CHANGELOG_TAG_OUTPUT}
+      tag: $${DRONE_TAG}
+
+  - name: 发布
+    image: ccr.ccs.tencentyun.com/dronestock/github
+    pull: always
+    when:
+      event:
+        - tag
+    environment:
+      TOKEN_GITHUB:
+        from_secret: token_github
+    settings:
+      release:
+        tag: $${DRONE_TAG}
+        token: $${TOKEN_GITHUB}
+        body: file('$${CHANGELOG_TAG_OUTPUT}')
 
 
 volumes:
-  - name: deps
-    temp: { }
+  - name: go
+    host:
+      path: /var/lib/cache/go
