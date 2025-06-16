@@ -5,7 +5,7 @@ go 1.24
 require (
 	github.com/goexl/gox v1.9.2
 	github.com/harluo/di v0.0.5
-	github.com/urfave/cli/v2 v2.27.6
+	github.com/urfave/cli/v2 v2.27.7
 )
 
 require (
