@@ -7,5 +7,6 @@ import (
 func init() {
 	di.New().Instance().Put(
 		newShell,
+		newShadow,
 	).Build().Apply()
 }

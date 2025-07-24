@@ -71,6 +71,11 @@ func (a *Application) Run(constructor runtime.Constructor) {
 
 	if cae := a.createShell(); nil != cae { // 创建运行壳
 		err = cae
+	} else if re := a.parseSettings(); nil != re { // 解析配置
+		// !必须在整个应用启动前执行
+		// !因为当应用真正启动时，有一些依赖配置参数还未得到解析
+		// !那么相关的配置项都未获取到命令行传入的配置值，导致依赖业务出现参数不正确而导致的问题（如加载本地配置文件指定了配置目录）
+		err = re
 	} else if ape := a.addDependency(constructor); nil != ape { // 添加应用程序本身包含依赖，供后续应用启动执行
 		err = ape
 	} else {
@@ -124,6 +129,14 @@ func (a *Application) convertCommand(command application.Command) (appended *cli
 	}
 
 	return
+}
+
+func (a *Application) addSettings(get get.Settings, shell *core.Shell, shadow *core.Shadow) {
+	for _, argument := range get.Arguments {
+		flag := core.NewArgument(argument).Flag()
+		shell.Flags = append(shell.Flags, flag)
+		shadow.Flags = append(shadow.Flags, flag)
+	}
 }
 
 func (a *Application) addArguments(booter Booter, get get.Arguments) error {
@@ -203,7 +216,7 @@ func (a *Application) startup(ctx context.Context) func(*core.Shell, Booter) err
 			err = cbe
 		} else if ple := a.putLogger(); nil != ple { // 日志
 			err = ple
-		} else if re := shell.Run(os.Args); nil != re { // 执行整个程序
+		} else if re := shell.RunContext(ctx, os.Args); nil != re { // 执行整个程序
 			err = re
 		} else if cae := a.after(ctx); nil != cae { // 执行命令生命周期方法
 			err = cae
@@ -213,6 +226,18 @@ func (a *Application) startup(ctx context.Context) func(*core.Shell, Booter) err
 
 		return
 	}
+}
+
+func (a *Application) parseSettings() error {
+	return a.container.Get(func(shadow *core.Shadow) (err error) {
+		if age := a.container.Get(a.addSettings).Build().Inject(); nil != age { // 增加配置
+			err = age
+		} else if re := shadow.Run(os.Args); nil != re {
+			err = re
+		}
+
+		return
+	}).Build().Inject()
 }
 
 func (a *Application) createShell() (err error) {
