@@ -8,6 +8,6 @@ import (
 )
 
 func TestNewApplication(t *testing.T) {
-	application := boot.New().Get()
+	application := boot.New().Instance()
 	assert.NotNil(t, application)
 }
