@@ -304,7 +304,7 @@ func (a *Application) putSelf() *Application {
 }
 
 func (a *Application) putLogger() (err error) {
-	if ge := a.container.Get(a.getLogger).Build().Inject(); nil != ge || nil == a.logger {
+	if ge := a.container.Get(a.getLogger).Build().Inject(); nil == ge && nil == a.logger {
 		err = a.container.Put(a.supplyLogger).Build().Inject() // !当出错或未成功设置时，重置日志器
 	}
 
