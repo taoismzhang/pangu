@@ -305,7 +305,9 @@ func (a *Application) putSelf() *Application {
 
 func (a *Application) putLogger() (err error) {
 	if ge := a.container.Get(a.getLogger).Build().Inject(); nil == ge && nil == a.logger {
-		err = a.container.Put(a.supplyLogger).Build().Inject() // !当出错或未成功设置时，重置日志器
+		if err = a.container.Put(a.supplyLogger).Build().Inject(); nil == err { // !当出错或未成功设置时，重置日志器
+			err = a.container.Get(a.checkLogger).Build().Inject()
+		}
 	}
 
 	return
@@ -315,6 +317,10 @@ func (a *Application) getLogger(get get.Logger) {
 	if nil != get.Logger { // !只有在确实有外部日志器的情况下才允许覆盖
 		a.logger = get.Logger
 	}
+}
+
+func (a *Application) checkLogger(logger log.Logger) {
+	logger.Debug("日志器检查成功", field.New("logger", logger))
 }
 
 func (a *Application) supplyLogger() log.Logger {
